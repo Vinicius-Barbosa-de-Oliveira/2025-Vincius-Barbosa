@@ -56,6 +56,7 @@ const Tarefas: React.FC<TareafasProps> = ({ dados }) => {
 	);
 };
 
+
 const Home = () => {
 	const [mostrarModal, setMostrarModal] = useState(false);
     const [tarefas, setTarefas] = useState<TarefaInterface[]>([]);
@@ -64,11 +65,20 @@ const Home = () => {
 		.then((res) => setTarefas(res))
 		.catch((err) => console.error("Erro ao carregar tarefas:", err));
 	}, []);
+    const adicionarTarefa = (titulo: string) => {
+        const novaTarefa: TarefaInterface = {
+          id: Date.now(), // gera um ID único simples
+          title: titulo,
+          completed: false,
+        };
+        setTarefas((prev) => [novaTarefa, ...prev]);
+    };
 
 	return (
 		<div className="container mx-auto p-4">
-			<Cabecalho />
-			<button
+
+            <Cabecalho />
+            <button
 			onClick={() => setMostrarModal(true)}
 			className="bg-blue-600 text-white px-4 py-2 rounded"
 			>
@@ -76,10 +86,16 @@ const Home = () => {
 			</button>
 
 			{mostrarModal && (
-				<ModalTarefa onFechar={() => setMostrarModal(false)} />
-			)}
+                <ModalTarefa
+                    onFechar={() => setMostrarModal(false)}
+                    onAdicionarTarefa={adicionarTarefa}
+                />
+            )}
 
-			<Tarefas dados={tarefas} />
+            <button className="bg-blue-600 text-white px-4 py-2 rounded">
+                <a href="./tarefas">Ver Tarefas</a>
+            </button>
+
 		</div>
 	);
 };
